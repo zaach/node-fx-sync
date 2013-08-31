@@ -41,6 +41,13 @@ Idp.prototype.createUser = function(options) {
   return user.setup();
 };
 
+Idp.prototype.getAssertion = function(options) {
+  return this.createUser(options)
+  .then(function(user) {
+    return user.getAssertion(options.audience, options.assertionDuration);
+  });
+};
+
 function User(options) {
   this.options = options;
 }
@@ -48,6 +55,9 @@ function User(options) {
 User.prototype.setup = function() {
   var deferred = P.defer();
   var self = this;
+  var duration = typeof self.options.certDuration !== 'undefined' ?
+                    self.options.certDuration :
+                    60 * 60 * 1000;
 
   // upon allocation of a user, we'll gen a keypair and get a signed cert
   jwcrypto.generateKeypair({ algorithm: "DS", keysize: 256 }, function(err, kp) {
@@ -55,8 +65,7 @@ User.prototype.setup = function() {
 
     self._keyPair = kp;
 
-    var expiration = new Date();
-    expiration.setTime(new Date().valueOf() + 60 * 60 * 1000);
+    var expiration = +new Date() + duration;
 
     jwcrypto.cert.sign(
       {
@@ -64,7 +73,7 @@ User.prototype.setup = function() {
         principal: { email: self.options.email }
       },
       {
-        expiresAt: self.options.certDuration || expiration,
+        expiresAt: expiration,
         issuer: self.options.domain,
         issuedAt: new Date()
       },
@@ -82,10 +91,10 @@ User.prototype.setup = function() {
   return deferred.promise;
 };
 
-User.prototype.getAssertion = function(audience, expiresAt) {
+User.prototype.getAssertion = function(audience, duration) {
   var deferred = P.defer();
   var self = this;
-  var expirationDate = expiresAt || new Date(new Date().getTime() + (2 * 60 * 1000));
+  var expirationDate = +new Date() + (typeof duration !== 'undefined' ?  duration : 60 * 60 * 1000);
 
   jwcrypto.assertion.sign({},
     {
