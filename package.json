@@ -16,7 +16,6 @@
   "dependencies": {
     "jwcrypto": "0.4.4",
     "request": "2.27.0",
-    "hawk": "1.1.0-pre",
     "p-promise": "0.2.5"
   }
 }

@@ -1,7 +1,6 @@
 const request = require('request');
 const fs = require('fs');
 const P = require("p-promise");
-const Hawk = require("hawk");
 
 /* Sync client
  * Uses the auth flow described here:
@@ -33,6 +32,18 @@ SyncClient.prototype.auth = function(assertion) {
   return deferred.promise;
 };
 
+SyncClient.prototype.get = function(path) {
+  return this.request(path, { method: 'GET' });
+};
+
+SyncClient.prototype.post = function(path, payload) {
+  return this.request(path, { method: 'POST', json: payload });
+};
+
+SyncClient.prototype.put = function(path, payload) {
+  return this.request(path, { method: 'PUT', json: payload });
+};
+
 SyncClient.prototype.request = function(path, options) {
   if (! options) options = {};
   if (typeof path === 'string') {
@@ -45,22 +56,20 @@ SyncClient.prototype.request = function(path, options) {
 
   var deferred = P.defer();
 
-  var credentials = {
-    id: this.token.id,
-    key: this.token.key,
-    algorithm: 'sha256'
+  options.hawk = {
+    credentials: {
+      id: this.token.id,
+      key: this.token.key,
+      algorithm: 'sha256'
+    }
   };
 
   options.uri = this.token.api_endpoint + options.path;
 
-  var header = Hawk.client.header(options.uri, 'GET', { credentials: credentials });
-  options.headers.Authorization = header.field;
-
   request(options, function (err, response, body) {
     if (err) return deferred.reject(err);
+    if (body === 'Unauthorized') return deferred.reject(body);
 
-    var isValid = Hawk.client.authenticate(response, credentials, header.artifacts, { payload: body });
-    if (!isValid) return deferred.reject('invalid MAC');
     deferred.resolve(body);
   });
 

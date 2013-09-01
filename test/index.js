@@ -20,7 +20,7 @@ mockIdp.getAssertion({
 })
 .then(function(info) {
   console.log(info);
-  return syncClient.request('/info/collections');
+  return syncClient.get('/info/collections');
 })
 .done(function(results) {
   console.log('results: ', results);
