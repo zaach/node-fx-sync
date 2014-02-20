@@ -19,7 +19,7 @@ mockIdp.getAssertion({
   return syncClient.auth(assertion);
 })
 .then(function(info) {
-  console.log(info);
+  console.log('auth result:', info);
   return syncClient.get('/info/collections');
 })
 .done(function(results) {

@@ -16,6 +16,10 @@
   "dependencies": {
     "jwcrypto": "0.4.4",
     "request": "2.27.0",
-    "p-promise": "0.2.5"
+    "p-promise": "0.2.5",
+    "picl-gherkin": "git://github.com/mozilla/fxa-js-client-old.git",
+    "hkdf": "0.0.1",
+    "xmlhttprequest": "~1.6.0",
+    "hawk": "~1.1.2"
   }
 }
