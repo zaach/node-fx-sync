@@ -18,8 +18,9 @@
     "request": "2.27.0",
     "p-promise": "0.2.5",
     "picl-gherkin": "git://github.com/mozilla/fxa-js-client-old.git",
+    "fxa-js-client": "git://github.com/glenjamin/fxa-js-client.git#nicer-npm",
     "hkdf": "0.0.1",
-    "xmlhttprequest": "~1.6.0",
+    "xmlhttprequest": "git://github.com/zaach/node-XMLHttpRequest.git#onerror",
     "hawk": "~1.1.2"
   }
 }
