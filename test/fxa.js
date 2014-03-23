@@ -1,33 +1,23 @@
-const P = require('p-promise');
-const HKDF = require('hkdf');
 const crypto = require('crypto');
-const jwcrypto = require('jwcrypto');
-require("jwcrypto/lib/algs/rs");
-require("jwcrypto/lib/algs/ds");
-//const FxAccountsClient = require('picl-gherkin');
-const FxAccountsClient = require('fxa-js-client');
-const xhr = require('xmlhttprequest').XMLHttpRequest;
+const assert = require('assert');
 
 const Request = require('../lib/request')();
 const SyncAuth = require('../lib/syncAuth')();
-const FxaUser = require('../lib/fxaUser')(P, jwcrypto, FxAccountsClient, xhr);
-const FxaSyncAuth = require('../lib/fxaSyncAuth')(FxaUser);
-const SyncClient = require('../lib/syncClient')(Request, HKDF, P, crypto);
-
-const assert = require('assert');
+const FxaSyncAuth = require('../lib/fxaSyncAuth')();
+const SyncClient = require('../lib/syncClient')();
 
 const duration = 3600 * 24 * 365;
 const syncAuthUrl = 'https://token.services.mozilla.com';
 const fxaServerUrl = 'https://api.accounts.firefox.com/v1';
-const email = 'zack.carter+fxasync@gmail.com';
-const password = 'password';
+const email = 'youraccount@email.com';
+const password = 'yourpassword';
 
 function hash (bytes) {
   var sha = crypto.createHash('sha256');
   return sha.update(bytes).digest();
 }
 
-var syncAuth = new SyncAuth(new Request(syncAuthUrl));
+var syncAuth = new SyncAuth(syncAuthUrl);
 var auth = new FxaSyncAuth(syncAuth, {
   certDuration: duration,
   duration: duration,

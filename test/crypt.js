@@ -64,3 +64,14 @@ var wbo = { payload: '{"ciphertext":"PoI050UwrZvi0o4d/A5ceRQoWfangl8Z3xX81hnkun/
 var result = decryptWBO(keyBundle, wbo);
 assert.ok(result.default);
 
+// client state
+
+function hash (bytes) {
+  var sha = crypto.createHash('sha256');
+  return sha.update(bytes).digest();
+}
+
+var kb = '6b813696a1f83a87e41506b7f33b991b985f3d6e0c934f867544e711882c179c';
+var state = '630b070cdd4369880a82762436c5399d';
+
+assert.equal(hash(Buffer(kb, 'hex')).slice(0, 16).toString('hex'), state);

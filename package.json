@@ -17,7 +17,7 @@
     "jwcrypto": "0.4.4",
     "request": "2.27.0",
     "p-promise": "0.2.5",
-    "fxa-js-client": "~0.1.14",
+    "fxa-js-client": "~0.1.15",
     "hkdf": "0.0.1",
     "xmlhttprequest": "git://github.com/zaach/node-XMLHttpRequest.git#onerror",
     "hawk": "~1.1.2"
