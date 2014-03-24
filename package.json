@@ -1,8 +1,8 @@
 {
-  "name": "sync-thing",
+  "name": "fx-sync",
   "version": "0.0.1",
-  "description": "Auth with Fx Sync servers",
-  "main": "sync.js",
+  "description": "Interact with Firefox Sync Servers",
+  "main": "index.js",
   "scripts": {
     "test": "node test/index.js"
   },
