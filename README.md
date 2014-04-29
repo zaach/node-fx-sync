@@ -1,6 +1,6 @@
 # node-fx-sync
 
-Create a new Firefox Account in Firefox 29 or newer and you'll be able to use this module to download your data. Fancy!
+Create a new Firefox Account in Firefox 29 or newer and you'll be able to use this module to download your Sync data. Fancy!
 
 ## Install
 
@@ -44,13 +44,13 @@ function renderBookmark(bookmark) {
 
 ## API
 
-## `sync = new FxSync({ email: <email>, password: <password> })`
+### `sync = new FxSync({ email: <email>, password: <password> })`
 
 Creates a new instance.
 
-## `sync.fetch(collection)`
+### `sync.fetch(collection)`
 
-E.g. `sync.fetch('tabs').then(function (result) { ... });
+E.g. `sync.fetch('tabs').then(function (result) { ... });`
 
 Fetch sync'ed data from `collection`. Useful `collection`s include: `passwords`, `tabs`, `forms`, `prefs`, `bookmarks`, `addons`, and `history`.
 
