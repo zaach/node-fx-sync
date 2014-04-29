@@ -1,6 +1,6 @@
 {
   "name": "fx-sync",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Interact with Firefox Sync Servers",
   "main": "index.js",
   "scripts": {
