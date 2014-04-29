@@ -13,15 +13,15 @@ if (!FxAccountsClient) FxAccountsClient = require('fxa-js-client');
 var certDuration = 3600 * 24 * 365;
 
 /*
- * 1. use gherkin to log in to Fxa with email password
- * 2. generate a keypair
+ * 1. use fxa-client to log in to Fxa with email password
+ * 2. generate a BrowserID keypair
  * 3. send public key to fxa server and get a cert
- * 4. generate an assertion with the new cert
+ * 4. generate a BrowserID assertion with the new cert
  */
 
-function FxUser(email, password, options) {
-  this.email = email;
-  this.password = password;
+function FxUser(creds, options) {
+  this.email = creds.email;
+  this.password = creds.password;
   this.options = options;
   this.client = new FxAccountsClient(
     this.options.fxaServerUrl || 'http://127.0.0.1:9000',
@@ -29,30 +29,6 @@ function FxUser(email, password, options) {
   );
 }
 
-
-function until (condFn, interval) {
-  return condFn.then(function (done) {
-    var deferred = P.defer();
-    if (done) {
-      return true;
-    }
-    setTimeout(until.bind(null, condFn, interval), interval);
-  });
-}
-
-FxUser.prototype._create = function() {
-  var self = this;
-  return this.client.signUp(
-      this.email,
-      this.password
-    )
-    .then(function (result) {
-      self.creds = result;
-      return self;
-    });
-};
-
-// conditionally create an account if needed and log in
 FxUser.prototype.auth = function() {
   var self = this;
   var creds;
@@ -61,13 +37,6 @@ FxUser.prototype.auth = function() {
       this.password,
       { keys: true }
     )
-    .then(null, function (err) {
-      return self.client.signUp(
-          self.email,
-          self.password,
-          { keys: true }
-        );
-    })
     .then(function (creds) {
       self.creds = creds;
       return self.client.accountKeys(creds.keyFetchToken, creds.unwrapBKey);

@@ -4,11 +4,12 @@
   "description": "Interact with Firefox Sync Servers",
   "main": "index.js",
   "scripts": {
-    "test": "node test/index.js"
+    "test": "node test/crypto.js"
   },
   "repository": "",
   "keywords": [
-    "persona",
+    "firefox",
+    "accounts",
     "sync"
   ],
   "author": "Zach Carter",
@@ -17,7 +18,7 @@
     "jwcrypto": "0.4.4",
     "request": "2.27.0",
     "p-promise": "0.2.5",
-    "fxa-js-client": "~0.1.15",
+    "fxa-js-client": "0.1.x",
     "hkdf": "0.0.1",
     "xmlhttprequest": "git://github.com/zaach/node-XMLHttpRequest.git#onerror",
     "hawk": "~1.1.2"

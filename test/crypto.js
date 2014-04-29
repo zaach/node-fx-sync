@@ -1,7 +1,7 @@
 var crypto = require('crypto');
 var assert = require('assert');
-var SyncClient = require('../lib/syncClient')();
-var decryptWBO = SyncClient.decryptWBO;
+var SyncClient = require('../sync/syncClient')();
+var Crypto = require('../sync/crypto')();
 
 var key, iv, payload;
 
@@ -50,7 +50,7 @@ var keyBundle = {
    hmacKey: Buffer("Cxbz9pbZ6RMkyeUXu9Uo4ZTebzp34yjY38/Z14ORSaM=", "base64")
 };
 
-var derivedKeys = SyncClient.prototype._deriveKeys.call({}, Buffer("a5653a34302125fd0a72619dbcc2cfada1b51d597c9d47995ed127daffcbf6a3", "hex"))
+var derivedKeys = Crypto.deriveKeys(Buffer("a5653a34302125fd0a72619dbcc2cfada1b51d597c9d47995ed127daffcbf6a3", "hex"))
   .then(function (bundle) {
     assert.equal(bundle.encKey, keyBundle.encKey);
     assert.equal(bundle.hmackey, keyBundle.hmackey);
@@ -61,17 +61,12 @@ var wbo = { payload: '{"ciphertext":"PoI050UwrZvi0o4d/A5ceRQoWfangl8Z3xX81hnkun/
   id: 'keys',
   modified: 1383878611.77 };
 
-var result = decryptWBO(keyBundle, wbo);
+var result = Crypto.decryptWBO(keyBundle, wbo);
 assert.ok(result.default);
 
 // client state
 
-function hash (bytes) {
-  var sha = crypto.createHash('sha256');
-  return sha.update(bytes).digest();
-}
-
 var kb = '6b813696a1f83a87e41506b7f33b991b985f3d6e0c934f867544e711882c179c';
 var state = '630b070cdd4369880a82762436c5399d';
 
-assert.equal(hash(Buffer(kb, 'hex')).slice(0, 16).toString('hex'), state);
+assert.equal(Crypto.computeClientState(Buffer(kb, 'hex')), state);

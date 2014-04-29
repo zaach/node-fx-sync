@@ -1,45 +1,41 @@
 const crypto = require('crypto');
 const assert = require('assert');
 
-const Request = require('../lib/request')();
-const SyncAuth = require('../lib/syncAuth')();
-const FxaSyncAuth = require('../lib/fxaSyncAuth')();
-const SyncClient = require('../lib/syncClient')();
+const Request = require('../sync/request')();
+const SyncAuth = require('../sync/syncAuth')();
+const FxaSyncAuth = require('../sync/fxaSyncAuth')();
+const SyncClient = require('../sync/syncClient')();
 
 const duration = 3600 * 24 * 365;
 const syncAuthUrl = 'https://token.services.mozilla.com';
 const fxaServerUrl = 'https://api.accounts.firefox.com/v1';
-const email = 'youraccount@email.com';
-const password = 'yourpassword';
 
-function hash (bytes) {
-  var sha = crypto.createHash('sha256');
-  return sha.update(bytes).digest();
+var creds;
+
+try {
+  creds = require('./creds.json');
+} catch (e) {
+  throw new Error('Create a new Sync account in Firefox >=29 and put your credentials in test/creds.json');
 }
+
+const email = creds.email;
+const password = creds.password;
 
 var syncAuth = new SyncAuth(syncAuthUrl);
 var auth = new FxaSyncAuth(syncAuth, {
   certDuration: duration,
   duration: duration,
   audience: syncAuthUrl,
-  fxaServerUrl: fxaServerUrl,
-  hash: hash
+  fxaServerUrl: fxaServerUrl
 });
 
 var syncClient;
 
-auth.auth(email, password)
+auth.auth(creds)
 .then(function(creds) {
-  console.log('creds', creds);
+  console.log('creds??', creds);
 
-  var storageClient = new Request(creds.token.api_endpoint, {
-    credentials: {
-      id: creds.token.id,
-      key: creds.token.key,
-      algorithm: creds.token.hashalg
-    }
-  });
-  syncClient = new SyncClient(storageClient, creds.keys);
+  syncClient = new SyncClient(creds);
 })
 .then(function() {
   return syncClient.info();
@@ -82,10 +78,10 @@ auth.auth(email, password)
   console.log('result ', data);
   assert.ok(syncClient.keyBundle.encKey, 'has encryption key');
   assert.ok(syncClient.keyBundle.hmacKey, 'has hmac key');
-  return syncClient.fetchCollection('bookmarks');
+  return syncClient.fetchCollection('tabs');
 })
 .done(function(results) {
-  console.log('bookmarks: ', results);
+  console.log('bookmarks: ', results[0]);
 },
 function (err) {
   console.error('error: ', err, err.stack);
