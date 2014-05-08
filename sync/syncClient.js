@@ -89,10 +89,10 @@ SyncClient.prototype.fetchCollection = function(collection, options) {
 
       return full ?
         objects.map(function (wbo) {
-          return Crypto.decryptWBO(keyBundle, wbo);
-        }) :
+          return Crypto.decryptWBO(this._collectionKey(collection), wbo);
+        }.bind(this)) :
         objects;
-    });
+    }.bind(this));
 };
 
 return SyncClient;

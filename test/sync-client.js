@@ -36,7 +36,6 @@ auth.auth(creds)
   console.log('creds??', creds);
 
   syncClient = new SyncClient(creds);
-  return syncClient.prepare();
 })
 .then(function() {
   return syncClient.info();
