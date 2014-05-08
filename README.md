@@ -44,15 +44,22 @@ function renderBookmark(bookmark) {
 
 ## API
 
-### `sync = new FxSync({ email: <email>, password: <password> })`
+#### `sync = new FxSync({ email: <email>, password: <password> })`
 
 Creates a new instance.
 
-### `sync.fetch(collection)`
+#### `sync.fetch(collection, options)`
 
 E.g. `sync.fetch('tabs').then(function (result) { ... });`
 
-Fetch sync'ed data from `collection`. Useful `collection`s include: `passwords`, `tabs`, `forms`, `prefs`, `bookmarks`, `addons`, and `history`.
+Fetch sync'ed data from `collection`. Useful `collection`s include: `passwords`, `tabs`, `forms`, `prefs`, `bookmarks`, `addons`, and `history`. For information on `options`, [look here](https://docs.services.mozilla.com/storage/apis-1.5.html#individual-collection-interaction).
+
+#### `sync.fetchIDs(collection, options)`
+
+E.g. `sync.fetchIDs('history', { limit: 50 }).then(function (result) { ... });`
+
+Fetch the IDs of objects in `collection`. You can use this to build more complicated queries without downloading the full contents of each object in the query. For information on `options`, [look here](https://docs.services.mozilla.com/storage/apis-1.5.html#individual-collection-interaction).
+
 
 ## License
 
