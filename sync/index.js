@@ -54,9 +54,18 @@ FxSync.prototype._auth = function(creds) {
     }.bind(this));
 };
 
-FxSync.prototype.fetch = function(collection) {
+FxSync.prototype.fetchIDs = function(collection, options) {
   return this._auth().then(function() {
-    return this._client.fetchCollection(collection);
+    return this._client.fetchCollection(collection, options);
+  }.bind(this));
+};
+
+FxSync.prototype.fetch = function(collection, options) {
+  if (!options) options = {};
+  options.full = true;
+
+  return this._auth().then(function() {
+    return this._client.fetchCollection(collection, options);
   }.bind(this));
 };
 

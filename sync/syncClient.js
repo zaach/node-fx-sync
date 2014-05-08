@@ -64,20 +64,29 @@ SyncClient.prototype.info = function(collection) {
   return this.client.get('/info/collections');
 };
 
-SyncClient.prototype.fetchIDs = function(collection) {
-  return this.client.get('/storage/' + collection)
-    .then(function (ids) {
-      return ids;
-    });
-};
+function options2query(options) {
+  return Object.keys(options).map(function (val) {
+    return val + '=' + encodeURIComponent(serialize(options[val]));
+  }).join('&');
+}
 
-SyncClient.prototype.fetchCollection = function(collection) {
+function serialize (val) {
+  return Array.isArray(val) ? val.join(',') : val;
+}
+
+SyncClient.prototype.fetchCollection = function(collection, options) {
+  var query = options ? '?' + options2query(options) : '';
+  var full = options && options.full;
+
   var keyBundle = this._collectionKey(collection);
-  return this.client.get('/storage/' + collection + "?full=true")
-    .then(function (wbos) {
-      return wbos.map(function (wbo) {
-        return Crypto.decryptWBO(keyBundle, wbo);
-      });
+  return this.client.get('/storage/' + collection + query)
+    .then(function (objects) {
+
+      return full ?
+        objects.map(function (wbo) {
+          return Crypto.decryptWBO(keyBundle, wbo);
+        }) :
+        objects;
     });
 };
 

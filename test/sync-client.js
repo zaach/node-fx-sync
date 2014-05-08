@@ -36,6 +36,7 @@ auth.auth(creds)
   console.log('creds??', creds);
 
   syncClient = new SyncClient(creds);
+  return syncClient.prepare();
 })
 .then(function() {
   return syncClient.info();
@@ -44,31 +45,31 @@ auth.auth(creds)
   console.log('info', info);
 })
 .then(function() {
-  return syncClient.fetchIDs('tabs');
+  return syncClient.fetchCollection('tabs');
 })
 .then(function(info) {
   console.log('tabs', info);
 })
 .then(function() {
-  return syncClient.fetchIDs('clients');
+  return syncClient.fetchCollection('clients');
 })
 .then(function(info) {
   console.log('clients', info);
 })
 .then(function() {
-  return syncClient.fetchIDs('meta');
+  return syncClient.fetchCollection('meta');
 })
 .then(function(info) {
   console.log('meta', info);
 })
 .then(function() {
-  return syncClient.fetchIDs('crypto');
+  return syncClient.fetchCollection('crypto');
 })
 .then(function(info) {
   console.log('crypto', info);
 })
 .then(function() {
-  return syncClient.fetchIDs('keys');
+  return syncClient.fetchCollection('keys');
 })
 .then(function(info) {
   console.log('keys', info);
@@ -78,7 +79,7 @@ auth.auth(creds)
   console.log('result ', data);
   assert.ok(syncClient.keyBundle.encKey, 'has encryption key');
   assert.ok(syncClient.keyBundle.hmacKey, 'has hmac key');
-  return syncClient.fetchCollection('tabs');
+  return syncClient.fetchCollection('tabs', { full: true });
 })
 .done(function(results) {
   console.log('bookmarks: ', results[0]);
