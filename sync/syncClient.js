@@ -64,10 +64,15 @@ SyncClient.prototype.info = function(collection) {
   return this.client.get('/info/collections');
 };
 
+var VALID_OPTIONS = ['ids', 'newer', 'full', 'limit', 'offset', 'sort'];
+
 function options2query(options) {
-  return Object.keys(options).map(function (val) {
-    return val + '=' + encodeURIComponent(serialize(options[val]));
-  }).join('&');
+  return Object.keys(options)
+    .filter(function (val) {
+      return VALID_OPTIONS.indexOf(val) !== -1;
+    }).map(function (val) {
+      return val + '=' + encodeURIComponent(serialize(options[val]));
+    }).join('&');
 }
 
 function serialize (val) {
