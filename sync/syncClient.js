@@ -83,7 +83,6 @@ SyncClient.prototype.fetchCollection = function(collection, options) {
   var query = options ? '?' + options2query(options) : '';
   var full = options && options.full;
 
-  var keyBundle = this._collectionKey(collection);
   return this.client.get('/storage/' + collection + query)
     .then(function (objects) {
 
